@@ -32,12 +32,12 @@
 	<distributionManagement>
 		 <snapshotRepository>
 		    <id>nexusRepo</id>
-		   <url>http://13.232.113.36:8081/repository/sample-snapshots/</url>
+		   <url>http://13.232.113.36:8081/repository/vasu-snapshots/</url>
 		 </snapshotRepository>
 		
 		<repository>
 		    <id>nexusRepo</id>
-		    <url>http://13.232.113.36:8081/repository/sample-releases/</url>
+		    <url>http://13.232.113.36:8081/repository/vasu-releases/</url>
 		</repository>
   	</distributionManagement>
 	
