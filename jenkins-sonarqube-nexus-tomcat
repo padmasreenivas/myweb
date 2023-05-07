@@ -1,0 +1,62 @@
+pipeline{
+    agent any
+        tools {
+          maven 'Maven-3.6.1'
+      }
+      
+      environment{
+      PATH = "/opt/maven3/bin:$PATH"
+      }
+   stages{
+   stage("Git checkout"){
+     steps{
+       git credentialsID: 'javahome2', url: https://github.com/padmasreenivas/myweb.git'
+       }
+    }
+    stages{
+      stage("maven build tool"){
+        steps{
+          sh "mvn clean sonar:sonar package"
+          }
+       }
+       stage('upload nexus to war'){
+       steps{
+            nexusartifactuploader artifacs: [
+             
+             [
+             artifactid:'myweb'
+             classifier: ",
+             file: "target/myweb-8.2.0.war",
+             type: war
+             ]
+             ],
+             credentialID: 'nexus3',
+             groupid: 'in.javahome'
+             nexusUrl: 172.31.41.93:8081,
+             nexusVersion: 'nexus3',
+             protocal: 'http',
+             repositary: 'sample-releases',
+             version: '8.2.0',
+             }
+         }
+     stage("deploy-dev"){
+     steps{
+       sshagent(['tomcat-new']){
+       sh """
+            scp -o StrickHostKeyChecking=no target/myweb-8.2.0.war /home/ec2-user/home/apache-tomcat-9.073/webapps/
+            
+            ssh ec2-user@172.31.41.93 /home/ec2-user/apache-tomcat-9.073/bin/shutdown.sh
+            
+            ssh ec2-user@172.41.54.84 /home/ec2-user/apache-tomcat-9.073/bin/startup.sh
+            """
+            }
+        }
+   }
+ }
+}
+             
+             
+             
+             
+             
+       
